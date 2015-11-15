@@ -1,13 +1,9 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 unzip("activity.zip")
 activity <- read.csv("activity.csv")
 
@@ -16,17 +12,21 @@ steps_per_day <- aggregate(steps ~ date, activity, sum)
 hist(steps_per_day$steps, breaks=10, xlab="Steps", main="Steps per Day")
 ```
 
+![](PA1_template_files/figure-html/unnamed-chunk-1-1.png) 
+
 
 ## What is mean total number of steps taken per day?
-```{r}
+
+```r
 mean_steps <- mean(steps_per_day$steps)
 median_steps <- median(steps_per_day$steps)
 ```
-The mean number of steps is `r mean_steps`.  
-The median number of steps is `r median_steps`.
+The mean number of steps is 1.0766189\times 10^{4}.  
+The median number of steps is 10765.
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 #aggregate the steps per interval
 average_steps_per_interval <- aggregate(steps ~ interval, activity, mean)
 
@@ -35,14 +35,19 @@ plot(average_steps_per_interval$interval,
      xlab="interval", 
      ylab="average steps per day", 
      main="Daily Activity Pattern")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+```r
 #find the interval with the maximum number of steps
 maximum_interval <- average_steps_per_interval[which.max(average_steps_per_interval$steps),1]
 ```
-The interval with the maximum number of steps is: `r maximum_interval`.
+The interval with the maximum number of steps is: 835.
 
 ## Imputing missing values
-```{r}
+
+```r
 missing_data_count <- nrow(activity[is.na(activity$steps),])
 
 activity_i <- activity
@@ -57,17 +62,22 @@ activity_i[is.na(activity_i$steps),]$steps <-
 #aggregate the steps per day
 steps_per_day_i <- aggregate(steps ~ date, activity_i, sum)
 hist(steps_per_day_i$steps, breaks=10, xlab="Steps", main="Steps per Day (Imputed)")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
 mean_steps_i <- mean(steps_per_day_i$steps)
 median_steps_i <- median(steps_per_day_i$steps)
-
 ```
-There are `r missing_data_count` records that are missing step data.
+There are 2304 records that are missing step data.
 
-The mean number of steps is `r mean_steps_i` after imputing the data (original mean: `r mean_steps`).  
-The median number of steps is `r median_steps_i` after imputing the data (original median: `r median_steps`).  
+The mean number of steps is 1.0765639\times 10^{4} after imputing the data (original mean: 1.0766189\times 10^{4}).  
+The median number of steps is 1.0762\times 10^{4} after imputing the data (original median: 10765).  
 
 ## Are there differences in activity patterns between weekdays and weekends?
-```{r}
+
+```r
 library(lattice)
 # calculate the weekend/weekday value for each date
 activity_i$weekday <- 
@@ -86,3 +96,5 @@ p <- xyplot(steps ~ interval | weekday,
             type="l")
 print(p)
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
